@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require('../server/models');
 
 const resolvers = {
   // get method to retrieve all users from the database
