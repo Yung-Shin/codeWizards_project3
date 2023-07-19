@@ -1,22 +1,18 @@
 {
-  "name": "finalproject_roulette",
+  "name": "final-project-roulette",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/server.js --ignore client",
+    "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+    "install": "cd server && npm i && cd ../client && npm i",
+    "seed": "cd server && npm run seed",
+    "build": "cd client && npm run build"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "axios": "^1.4.0",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "mongoose": "^7.3.4",
-    "nodemon": "^3.0.1",
-    "react": "^18.2.0",
-    "router": "^1.3.8",
-    "stripe": "^12.13.0"
+  "devDependencies": {
+    "concurrently": "^5.3.0"
   }
 }
