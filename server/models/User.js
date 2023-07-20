@@ -1,34 +1,35 @@
-const { Schema, model, Types } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 // Creating a User schema 
 const userSchema = new Schema({
-    userName: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      valdate: {
-        validator: function (v) {
-          return /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/.test(v);
-        },
-      },
-    },
-    password: {
-        type: String,
-        required: true,
-        minlength: 8,
-    },
+  firstName: {
+    type: String,
+    required: true,
+    trim: true,
   },
-  {
-    toJSON: {
-      virtuals: true, 
-    },
-      id: false, 
+  lastName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  userName: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [/.+@.+\..+/, 'Must match an email address!'],
+  },
+
 });
 
 const User = model("User", userSchema);
