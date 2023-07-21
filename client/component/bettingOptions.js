@@ -2,7 +2,7 @@ import React from 'react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import NewRouletteForm from './NewRouletteForm';
-import RouletteWheel from './rouletteWheel';
+import RouletteWheel from './css/rouletteWheel';
 import UserInteractions from './userInteractions';
 
 const BettingOptions = () => {

@@ -1,6 +1,27 @@
-// RouletteWheel.js
 import React, { useState } from 'react';
-import './css/RouletteWheel.css'; // Import the CSS file for styling
+import styled, { keyframes } from 'styled-components';
+
+const spinAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const RouletteWheelContainer = styled.div`
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #31a054;
+  /* Replace with your preferred color/image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  animation: ${({ isSpinning }) => (isSpinning ? `${spinAnimation} 3s linear infinite` : 'none')};
+`;
 
 const RouletteWheel = () => {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -20,17 +41,14 @@ const RouletteWheel = () => {
   };
 
   return (
-    <div className="roulette-wheel">
-      {/* Your Roulette wheel content */}
-      <div className={`wheel ${isSpinning ? 'spinning' : ''}`}>
-        {/* The wheel content, you can add your own design here */}
-        {isSpinning ? 'Spinning...' : 'Spin the wheel'}
-      </div>
+    <RouletteWheelContainer isSpinning={isSpinning}>
+      {/* The wheel content, you can add your own design here */}
+      {isSpinning ? 'Spinning...' : 'Spin the wheel'}
       {result !== null && <p>The wheel stopped at: {result}</p>}
       <button onClick={spinWheel} disabled={isSpinning}>
         Spin the wheel
       </button>
-    </div>
+    </RouletteWheelContainer>
   );
 };
 
