@@ -35,7 +35,19 @@ const LoginForm = () => {
 
     return (
         <div>
-            {/* Your login form content */}
+            <input
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="Username"
+            />
+            <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+            />
+            <button onClick={handleLogin}>Login</button>
         </div>
     );
 };
