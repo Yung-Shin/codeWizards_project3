@@ -1,14 +1,14 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
+const path = require("path");
 // import ApolloServer
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require("apollo-server-express");
 // import graphQl schemas and resolvers
-const { typeDefs, resolvers } = require('./schemas');
-const { authenticator } = require('./utils/auth');
-const { User } = require('./models');
+const { typeDefs, resolvers } = require("./schemas");
+const { authenticator } = require("./utils/auth");
+const { User } = require("./models");
 // database connection
-const connection = require('./config/connection');
-const routes = require('./routes');
+const connection = require("./config/connection");
+const routes = require("./routes");
 
 // ----- imports requires-------
 
@@ -31,21 +31,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use(routes);
 
 // Create route for the root URL.
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-app.post('/api/register', async (req, res) => {
+app.post("/api/register", async (req, res) => {
   try {
     const { firstName, lastName, userName, password, email } = req.body;
-    const user = await User.create({ firstName, lastName, userName, password, email })
+    const user = await User.create({
+      firstName,
+      lastName,
+      userName,
+      password,
+      email,
+    });
     const token = signToken(user);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to register user' });
+    res.status(500).json({ message: "Failed to register user" });
   }
 });
 
-app.post('/api/login', async (req, req) => {
+app.post('/api/login', async (req, res) => { // <-- Change "req" to "res" here
   try {
     const { userName, password } = req.body;
     const user = await User.findOne({ userName });
@@ -53,14 +59,15 @@ app.post('/api/login', async (req, req) => {
       res.status(400).json({ message: 'Invalid credentials' });
       return;
     }
-    const toekn = signToken(user);
+    const token = signToken(user); // <-- Fix the variable name from "toekn" to "token"
     res.json({ token, user });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in' });
   }
 });
 
-app.delete('/api/some_data/:id', (req, res) => {
+
+app.delete("/api/some_data/:id", (req, res) => {
   // DELETE request logic
   // For example, delete data from the database based on the request parameter (id)
   // delete account or user etc.
@@ -70,17 +77,18 @@ app.delete('/api/some_data/:id', (req, res) => {
 const startApolloServer = async () => {
   await server.start();
 
-  connection.once('open', () => {
+  connection.once("open", () => {
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
-      console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(
+        `Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`
+      );
     });
   });
 };
 
 app.listen(3001, () => {
-  console.log('Server listening on port 3001');
+  console.log("Server listening on port 3001");
 });
 
 startApolloServer();
-
