@@ -8,8 +8,8 @@ const rouletteRoutes = require('./api/roulette-routes');
 // Use the userRoutes for /api/user
 router.use('/api/user', userRoutes);
 // purchase Tokens route
-router.use('/api/purchase', purchaseRoutes);
+// router.use('/api/purchase', purchaseRoutes);
 // new roulette routes
-router.use('/roulette', rouletteRoutes);
+// router.use('/api/roulette', rouletteRoutes);
 
 module.exports = router;

@@ -13,7 +13,6 @@ const routes = require("./routes");
 // ----- imports requires-------
 
 const PORT = process.env.PORT || 3001;
-
 const app = express();
 
 const server = new ApolloServer({
@@ -21,8 +20,6 @@ const server = new ApolloServer({
   resolvers,
   context: authenticator, // Use the authenticatr middleware to check for authentication
 });
-
-server.applyMiddleware({ app });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -32,7 +29,7 @@ app.use(routes);
 
 // Create route for the root URL.
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+  res.sendFile(path.join(__dirname, "../client/public/index.html"));
 });
 
 app.post("/api/register", async (req, res) => {
@@ -76,6 +73,7 @@ app.delete("/api/some_data/:id", (req, res) => {
 // Create a new instance of an Apollo server with the GraphQL schema
 const startApolloServer = async () => {
   await server.start();
+  server.applyMiddleware({ app });
 
   connection.once("open", () => {
     app.listen(PORT, () => {
@@ -87,8 +85,8 @@ const startApolloServer = async () => {
   });
 };
 
-app.listen(3001, () => {
-  console.log("Server listening on port 3001");
-});
+// app.listen(3001, () => {
+//   console.log("Server listening on port 3001");
+// });
 
 startApolloServer();

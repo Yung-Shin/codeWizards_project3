@@ -1,0 +1,1258 @@
+--- Folder Structure ---
+.env
+.eslintrc.js
+.prettierrc
+.project_structure_ignore
+[client]
+    ├── .project_structure_ignore
+    ├── [component]
+        ├── bettingOptions.js
+        ├── LoginForm.js
+        ├── NewRouletteForm.js
+        ├── RegisterForm.js
+        ├── RouletteGame.js
+        ├── rouletteWheel.js
+        └── userInteractions.js
+    ├── package-lock.json
+    ├── package.json
+    ├── [public]
+        ├── index.html
+        └── manifest.json
+    └── [src]
+        ├── App.js
+        ├── [graphQL]
+            ├── mutations.js
+            └── queries.js
+        ├── index.js
+        ├── [pages]
+            └── Home.js
+        └── [utils]
+            └── queries.js
+package-lock.json
+package.json
+README.md
+[server]
+    ├── [config]
+        └── connection.js
+    ├── [models]
+        ├── index.js
+        ├── Roulette.js
+        └── User.js
+    ├── package-lock.json
+    ├── package.json
+    ├── [routes]
+        ├── [api]
+            ├── leaderboard-routes.js
+            ├── purchase-routes.js
+            ├── roulette-routes.js
+            └── user-routes.js
+        └── index.js
+    ├── [schemas]
+        ├── index.js
+        ├── resolvers.js
+        └── typeDefs.js
+    ├── server.js
+    └── [utils]
+        └── auth.js
+
+--- File Contents ---
+
+--- File: .env ---
+
+
+--- File: .eslintrc.js ---
+module.exports = {
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended"
+    ],
+    "overrides": [
+        {
+            "env": {
+                "node": true
+            },
+            "files": [
+                ".eslintrc.{js,cjs}"
+            ],
+            "parserOptions": {
+                "sourceType": "script"
+            }
+        }
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "react"
+    ],
+    "rules": {
+    }
+}
+
+
+--- File: .prettierrc ---
+
+
+--- File: client\.project_structure_ignore ---
+bash
+node_modules
+dist
+*.log
+package-lock.json
+READMEmd
+
+.git
+
+--- File: client\component\bettingOptions.js ---
+import React from 'react';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
+import NewRouletteForm from './NewRouletteForm';
+import RouletteWheel from './css/rouletteWheel';
+import UserInteractions from './userInteractions';
+
+const BettingOptions = () => {
+  return (
+    <div>
+      <h2>Login</h2>
+      <LoginForm />
+
+      <h2>Register</h2>
+      <RegisterForm />
+
+      <h2>Create New Roulette</h2>
+      <NewRouletteForm />
+
+      <h2>Roulette Wheel</h2>
+      <RouletteWheel />
+
+      <h2>User Interactions</h2>
+      <UserInteractions />
+    </div>
+  );
+};
+
+export default BettingOptions;
+
+
+--- File: client\component\LoginForm.js ---
+import React, { useState } from 'react';
+import { useMutation, gql } from '@apollo/client';
+
+const LOGIN_USER = gql`
+  mutation LoginUser($userName: String!, $password: String!) {
+    login(userName: $userName, password: $password) {
+      token
+      user {
+        _id
+        userName
+      }
+    }
+  }
+`;
+
+const LoginForm = () => {
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [loginUser] = useMutation(LOGIN_USER);
+
+    const handleLogin = () => {
+        loginUser({
+            variables: { userName, password },
+        })
+            .then((data) => {
+                // Handle successful login, store token, redirect, etc.
+                console.log('User logged in successfully:', data);
+            })
+            .catch((error) => {
+                // Handle error, display error message, etc.
+                console.error('Error logging in:', error.message);
+            });
+    };
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="Username"
+            />
+            <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+            />
+            <button onClick={handleLogin}>Login</button>
+        </div>
+    );
+};
+
+export default LoginForm;
+
+--- File: client\component\NewRouletteForm.js ---
+import React, { useState } from 'react';
+import { useMutation, gql } from '@apollo/client';
+
+const CREATE_ROULETTE = gql`
+  mutation CreateRoulette($winningName: String!, $winningChance: Float!) {
+    createRoulette(winningName: $winningName, winningChance: $winningChance) {
+      _id
+      winningName
+      winningChance
+    }
+  }
+`;
+
+const NewRouletteForm = () => {
+    const [winningName, setWinningName] = useState('');
+    const [winningChance, setWinningChance] = useState('');
+
+    const [createRoulette] = useMutation(CREATE_ROULETTE);
+
+    const handleCreateRoulette = () => {
+        createRoulette({
+            variables: { winningName, winningChance: parseFloat(winningChance) },
+        })
+            .then((data) => {
+                // Handle successful creation, reset form, etc.
+                console.log('Roulette created successfully:', data);
+            })
+            .catch((error) => {
+                // Handle error, display error message, etc.
+                console.error('Error creating Roulette:', error.message);
+            });
+    };
+
+    return (
+        <div>
+            {/* Form to input Roulette data */}
+            <input
+                type="text"
+                value={winningName}
+                onChange={(e) => setWinningName(e.target.value)}
+                placeholder="Winning Name"
+            />
+            <input
+                type="text"
+                value={winningChance}
+                onChange={(e) => setWinningChance(e.target.value)}
+                placeholder="Winning Chance"
+            />
+            <button onClick={handleCreateRoulette}>Create Roulette</button>
+        </div>
+    );
+};
+
+export default NewRouletteForm;
+
+
+--- File: client\component\RegisterForm.js ---
+import React, { useState } from 'react';
+import { useMutation, gql } from '@apollo/client';
+
+const REGISTER_USER = gql`
+  mutation RegisterUser($firstName: String!, $lastName: String!, $userName: String!, $password: String!, $email: String!) {
+    createUser(firstName: $firstName, lastName: $lastName, userName: $userName, password: $password, email: $email) {
+      token
+      user {
+        _id
+        userName
+      }
+    }
+  }
+`;
+
+const RegisterForm = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+
+    const [registerUser] = useMutation(REGISTER_USER);
+
+    const handleRegister = () => {
+        registerUser({
+            variables: { firstName, lastName, userName, password, email },
+        })
+            .then((data) => {
+                // Handle successful registration, redirect, show success message, etc.
+                console.log('User registered successfully:', data);
+            })
+            .catch((error) => {
+                // Handle error, display error message, etc.
+                console.error('Error registering user:', error.message);
+            });
+    };
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="First Name"
+            />
+            <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Last Name"
+            />
+            <input
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                placeholder="User Name"
+            />
+            <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+            />
+            <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email"
+            />
+            <button onClick={handleRegister}>Register</button>
+        </div>
+    );
+};
+
+
+export default RegisterForm;
+
+--- File: client\component\RouletteGame.js ---
+import React from 'react';
+import { useMutation, gql } from '@apollo/client';
+
+const SPIN_ROULETTE = gql`
+  mutation SpinRoulette($rouletteId: ID!) {
+    spinRoulette(rouletteId: $rouletteId) {
+      winningName
+      won
+    }
+  }
+`;
+
+const RouletteGame = ({ rouletteId }) => {
+    const [spinRoulette, { data }] = useMutation(SPIN_ROULETTE);
+
+    const handleSpin = () => {
+        spinRoulette({ variables: { rouletteId } });
+    };
+
+    const result = data?.spinRoulette || {};
+
+    return (
+        <div>
+            <button onClick={handleSpin}>Spin the Roulette!</button>
+            {result.winningName && (
+                <div>
+                    <h2>Result:</h2>
+                    <p>Winning Name: {result.winningName}</p>
+                    <p>You {result.won ? 'Won' : 'Lost'}!</p>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default RouletteGame;
+
+
+--- File: client\component\rouletteWheel.js ---
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+
+const spinAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const RouletteWheelContainer = styled.div`
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #31a054;
+  /* Replace with your preferred color/image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  animation: ${({ isSpinning }) => (isSpinning ? `${spinAnimation} 3s linear infinite` : 'none')};
+`;
+
+const RouletteWheel = () => {
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [result, setResult] = useState(null);
+
+  const spinWheel = () => {
+    if (isSpinning) return; // Prevent spinning while it's already spinning
+    setIsSpinning(true);
+
+    // Simulate spinning for 3 seconds and get the random result
+    setTimeout(() => {
+      const randomNumber = Math.floor(Math.random() * 37);
+      setIsSpinning(false);
+      setResult(randomNumber);
+      console.log('The wheel stopped at:', randomNumber);
+    }, 3000); // 3 seconds
+  };
+
+  return (
+    <RouletteWheelContainer isSpinning={isSpinning}>
+      {/* The wheel content, you can add your own design here */}
+      {isSpinning ? 'Spinning...' : 'Spin the wheel'}
+      {result !== null && <p>The wheel stopped at: {result}</p>}
+      <button onClick={spinWheel} disabled={isSpinning}>
+        Spin the wheel
+      </button>
+    </RouletteWheelContainer>
+  );
+};
+
+export default RouletteWheel;
+
+
+--- File: client\component\userInteractions.js ---
+// UserInteractions.js
+import React, { useState } from 'react';
+
+const UserInteractions = () => {
+  const [message, setMessage] = useState('');
+
+  const handleInteraction = () => {
+    // Your interaction logic here
+    setMessage('Button clicked!');
+  };
+
+  return (
+    <div>
+      {/* Your user interactions content */}
+      <button onClick={handleInteraction}>Click me</button>
+      {message && <p>{message}</p>}
+    </div>
+  );
+};
+
+export default UserInteractions;
+
+
+--- File: client\package.json ---
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:3001",
+  "dependencies": {
+    "@apollo/client": "^3.7.17",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.5.0",
+    "graphql": "^15.8.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
+
+
+--- File: client\public\index.html ---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Your app description" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+    <!-- Add your custom CSS files or other external stylesheets here -->
+
+    <title>Your App Title</title>
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+</body>
+
+</html>
+
+--- File: client\public\manifest.json ---
+{
+    "name": "My Roulette Game",
+    "short_name": "Roulette",
+    "description": "Play the exciting Roulette game and win big!",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "icon-192x192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "icon-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "orientation": "portrait"
+}
+
+--- File: client\src\App.js ---
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import Home from './pages/Home';
+
+
+const client = new ApolloClient({
+  uri: '/graphql',
+  cache: new InMemoryCache(),
+});
+
+function App() {
+  return (
+    <ApolloProvider client={client}>
+      <Router>
+        <div>
+          <Routes>
+            <Route 
+              path="/" 
+              element={<Home />}
+            />
+         
+            <Route 
+              path="*"
+              element={<div>404</div>}
+            />
+          </Routes>
+        </div>
+      </Router>
+    </ApolloProvider>
+  );
+}
+
+export default App;
+
+
+--- File: client\src\graphQL\mutations.js ---
+import { gql } from '@apollo/client';
+
+export const CREATE_USER = gql`
+
+`;
+
+export const CREATE_ROULETTE = gql`
+
+`;
+
+
+--- File: client\src\graphQL\queries.js ---
+
+
+--- File: client\src\index.js ---
+// Import necessary dependencies
+import React from 'react';
+import ReactDOM from 'react-dom';
+// import './index.css';
+import App from './App';
+
+// Import required Apollo Client dependencies
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+
+// Create an Apollo Client instance
+const client = new ApolloClient({
+  uri: '/graphql', // Replace with the URL of your GraphQL server
+  cache: new InMemoryCache(),
+});
+
+// Render the App component wrapped in ApolloProvider
+ReactDOM.render(
+  <ApolloProvider client={client}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  </ApolloProvider>,
+  document.getElementById('root')
+);
+
+
+--- File: client\src\pages\Home.js ---
+// Import necessary dependencies
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useQuery, gql } from '@apollo/client'; // Import gql from @apollo/client to define the GraphQL query
+
+// Define the GraphQL query
+const GET_MATCHUPS = gql`
+  query GetMatchups {
+    matchups {
+      _id
+      // Add other fields you want to fetch from the server
+    }
+  }
+`;
+
+const Home = () => {
+  // Use the useQuery hook to fetch data from the server
+  const { loading, error, data } = useQuery(GET_MATCHUPS, {
+    fetchPolicy: 'no-cache', // Disable cache for real-time data
+  });
+
+  // Extract the matchups from the data
+  const matchupList = data?.matchups || [];
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching matchups</div>;
+
+  return (
+    <div>
+      {/* Display the list of matchups */}
+      {matchupList.map((matchup) => (
+        <div key={matchup._id}>
+          <p>Matchup ID: {matchup._id}</p>
+          {/* Add other fields you want to display */}
+        </div>
+      ))}
+      <Link to="/create-matchup">Create New Matchup</Link> {/* Link to a page where users can create a new matchup */}
+    </div>
+  );
+};
+
+export default Home;
+
+
+--- File: client\src\utils\queries.js ---
+import { gql } from '@apollo/client';
+
+export const QUERY_USER = gql`
+
+`;
+
+export const QUERY_ROULETTE = gql`
+
+`;
+
+
+--- File: package.json ---
+{
+  "name": "final-project-roulette",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "cd server && npm start",
+    "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+    "install": "cd server && npm i && cd ../client && npm i",
+    "seed": "cd server && npm run seed",
+    "build": "cd client && npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "concurrently": "^5.3.0",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.33.0",
+    "prettier": "^3.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "concurrently": "^5.3.0"
+  }
+}
+
+
+--- File: server\config\connection.js ---
+const mongoose = require('mongoose');
+
+// connecting to mongoDB and create a db called codeWizardsFinalProject
+mongoose.connect('mongodb://127.0.0.1/codeWizardsFinalProject')
+  .then(() => {
+    console.log('You are connected to the DB');
+  })
+  .catch(error => console.log(error));
+
+
+module.exports = mongoose.connection
+
+--- File: server\models\index.js ---
+const User = require("./User");
+const Roulette = require("./Roulette");
+
+module.exports = { User, Roulette };
+
+
+--- File: server\models\Roulette.js ---
+const { Schema, model } = require("mongoose");
+
+const rouletteSchema = new Schema({
+    winningName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    winningChance: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        index: true,
+      },
+});
+
+const Roulette = model("Roulette", rouletteSchema);
+
+
+module.exports = Roulette;
+
+--- File: server\models\User.js ---
+const { Schema, model } = require("mongoose");
+
+// Creating a User schema 
+const userSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  userName: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [/.+@.+\..+/, 'Must match an email address!'],
+  },
+
+});
+
+const User = model("User", userSchema);
+
+
+module.exports = User;
+
+--- File: server\package.json ---
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node seeds/seed.js",
+    "watch": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^3.6.2",
+    "bcrypt": "^5.1.0",
+    "express": "^4.17.2",
+    "graphql": "^16.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^7.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "keywords": [],
+  "description": ""
+}
+
+
+--- File: server\routes\api\leaderboard-routes.js ---
+//  If you have a leaderboard feature to track and display high scores or
+//  achievements, you can define the routes for retrieving leaderboard data in this file.
+
+--- File: server\routes\api\purchase-routes.js ---
+const express = require('express');
+const { User } = require('../../models');
+
+const router = express.Router();
+
+router.post('/purchase', async (req, res) => {
+    try {
+        const { userId, tokensToPurchase } = req.body;
+
+        // Find the user by userId in the database
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Perform the token purchase logic, e.g., calculate total cost, update user's token balance
+        // and save the updated user data in the database
+        // ...
+
+        // Return the updated user object or any relevant response data
+        res.json({ message: 'Token purchase successful', user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to purchase tokens' });
+    }
+});
+
+module.exports = router;
+
+
+--- File: server\routes\api\roulette-routes.js ---
+//  If your application has routes related to managing roulette games,
+//  such as creating new roulettes, retrieving existing roulettes,
+//  and handling roulette gameplay actions, you can place them in this file.
+
+
+
+--- File: server\routes\api\user-routes.js ---
+const express = require('express');
+const { User } = require('../../models');
+const { signToken } = require('../../utils/auth');
+
+const router = express.Router();
+
+router.post('/register', async (req, res) => {
+    try {
+        const { firstName, lastName, userName, password, email } = req.body;
+        const user = await User.create({ firstName, lastName, userName, password, email });
+        const token = signToken(user);
+        res.json({ token, user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to register user' });
+    }
+});
+
+router.post('/login', async (req, res) => {
+    try {
+        const { userName, password } = req.body;
+        const user = await User.findOne({ userName });
+        if (!user || !user.isCorrectPassword(password)) {
+            res.status(400).json({ message: 'Invalid credentials' });
+            return;
+        }
+        const token = signToken(user);
+        res.json({ token, user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error logging in' });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        // Delete the user from the database based on the provided id
+        await User.findByIdAndDelete(id);
+        res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to delete user' });
+    }
+});
+
+module.exports = router;
+
+
+--- File: server\routes\index.js ---
+const express = require('express');
+const router = express.Router();
+
+const userRoutes = require('./api/user-routes'); // Update the file path to './user-routes'
+const purchaseRoutes = require('./api/purchase-routes');
+const rouletteRoutes = require('./api/roulette-routes');
+
+// Use the userRoutes for /api/user
+router.use('/api/user', userRoutes);
+// purchase Tokens route
+router.use('/api/purchase', purchaseRoutes);
+// new roulette routes
+router.use('./api/roulette', rouletteRoutes);
+
+module.exports = router;
+
+
+--- File: server\schemas\index.js ---
+const typeDefs = require('./typeDefs');
+const resolvers = require('./resolvers');
+
+module.exports = { typeDefs, resolvers };
+
+
+--- File: server\schemas\resolvers.js ---
+const { User, Roulette } = require('../models');
+const { signToken } = require("../utils/auth");
+const { AuthenticationError } = require("apollo-server-express");
+
+const resolvers = {
+  // Query resolvers to fetch data
+  Query: {
+    // Resolver to get all users
+    users: async () => {
+      try {
+        // Retrieve all users from the database using the User model
+        const users = await User.find();
+        return users;
+      } catch (error) {
+        // If there's an error during the database query, log the error and throw a custom error message
+        console.error(error);
+        throw new Error('Failed to fetch users');
+      }
+    },
+
+    // Resolver to get a single user by username
+    user: async (parent, { username }) => {
+      try {
+        // Find a user in the database with the provided username using the User model
+        const user = await User.findOne({ username });
+        return user;
+      } catch (error) {
+        // If there's an error during the database query, log the error and throw a custom error message
+        console.error(error);
+        throw new Error('Failed to fetch user by username');
+      }
+    },
+  },
+
+  // Mutation resolvers to modify data
+  Mutation: {
+    // Resolver to create a new user
+    createUser: async (parent, { firstName, lastName, userName, password, email }) => {
+      try {
+        // Create a new user document in the database with the provided data using the User model
+        const user = await User.create({
+          firstName,
+          lastName,
+          userName,
+          password,
+          email,
+        });
+
+        // Sign a token for authentication, using the user data, and return the token and user
+        const token = signToken(user);
+        return { token, user };
+      } catch (error) {
+        // If there's an error during the creation process, log the error and throw a custom error message
+        console.error(error);
+        throw new Error('Failed to create a user');
+      }
+    },
+
+    // Resolver to handle user login
+    login: async (parent, { userName }) => {
+      try {
+        // Find a user in the database with the provided username using the User model
+        const user = await User.findOne({ userName });
+
+        if (!user) {
+          // If the user is not found, throw an AuthenticationError
+          throw new AuthenticationError("No user found with this username");
+        }
+
+        // Sign a token for authentication, using the user data, and return the token and user
+        const token = signToken(user);
+        return { token, user };
+      } catch (error) {
+        // If there's an error during the database query or token signing, log the error and throw a custom error message
+        console.error(error);
+        throw new Error('Failed to perform user login');
+      }
+    },
+
+    // Resolver to spin the roulette
+    spinRoulette: async (parent, { rouletteId }) => {
+      try {
+        const roulette = await Roulette.findById(rouletteId);
+
+        if (!roulette) {
+          throw new Error('Roulette not found');
+        }
+
+        const won = Math.random() < roulette.winningChance;
+
+        return { winningName: roulette.winningName, won };
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to spin the roulette');
+      }
+    },
+  },
+};
+
+// Export the resolvers
+module.exports = resolvers;
+
+
+--- File: server\schemas\typeDefs.js ---
+// Import necessary packages
+const { gql } = require('apollo-server-express');
+
+// Define the GraphQL schema using GraphQL SDL (Schema Definition Language)
+const typeDefs = gql`
+  type User {
+    _id: ID!
+    firstName: String!
+    lastName: String!
+    userName: String!
+    password: String! 
+    email: String!
+  }
+
+  type Auth {
+    token: ID!
+    user: User
+  }
+
+  type Roulette {
+    _id: ID!
+    winningName: String!
+    winningChance: Float!
+    userId: ID!
+  }
+
+  type SpinResult {
+    winningName: String!
+    won: Boolean!
+
+  }
+  type Query {
+    users: [User]
+    user(userName: String): User
+    me: User
+    roulettes: [Roulette]
+  }
+
+  type Mutation {
+    createUser(firstName: String!, lastName: String!, userName: String!, password: String!, email: String!): Auth
+    login(userName: String!, password: String!): Auth
+    createRoulette(winningName: String!, winningChance: Float!): Roulette # New mutation to create a Roulette
+  }
+`;
+
+module.exports = typeDefs;
+
+
+--- File: server\server.js ---
+const express = require("express");
+const path = require("path");
+// import ApolloServer
+const { ApolloServer } = require("apollo-server-express");
+// import graphQl schemas and resolvers
+const { typeDefs, resolvers } = require("./schemas");
+const { authenticator } = require("./utils/auth");
+const { User } = require("./models");
+// database connection
+const connection = require("./config/connection");
+const routes = require("./routes");
+
+// ----- imports requires-------
+
+const PORT = process.env.PORT || 3001;
+
+const app = express();
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: authenticator, // Use the authenticatr middleware to check for authentication
+});
+
+server.applyMiddleware({ app });
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// use routes
+app.use(routes);
+
+// Create route for the root URL.
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
+
+app.post("/api/register", async (req, res) => {
+  try {
+    const { firstName, lastName, userName, password, email } = req.body;
+    const user = await User.create({
+      firstName,
+      lastName,
+      userName,
+      password,
+      email,
+    });
+    const token = signToken(user);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to register user" });
+  }
+});
+
+app.post('/api/login', async (req, res) => { // <-- Change "req" to "res" here
+  try {
+    const { userName, password } = req.body;
+    const user = await User.findOne({ userName });
+    if (!user || !user.isCorrectPassword(password)) {
+      res.status(400).json({ message: 'Invalid credentials' });
+      return;
+    }
+    const token = signToken(user); // <-- Fix the variable name from "toekn" to "token"
+    res.json({ token, user });
+  } catch (error) {
+    res.status(500).json({ message: 'Error logging in' });
+  }
+});
+
+
+app.delete("/api/some_data/:id", (req, res) => {
+  // DELETE request logic
+  // For example, delete data from the database based on the request parameter (id)
+  // delete account or user etc.
+});
+
+// Create a new instance of an Apollo server with the GraphQL schema
+const startApolloServer = async () => {
+  await server.start();
+
+  connection.once("open", () => {
+    app.listen(PORT, () => {
+      console.log(`API server running on port ${PORT}!`);
+      console.log(
+        `Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`
+      );
+    });
+  });
+};
+
+app.listen(3001, () => {
+  console.log("Server listening on port 3001");
+});
+
+startApolloServer();
+
+
+--- File: server\utils\auth.js ---
+const jwt = require('jsonwebtoken');
+
+// set token secret and expiration date
+const secret = 'superdupersecret';
+const expiration = '2h';
+
+module.exports = {
+  // function for our authenticated routes
+  authenticator: function ({ req }) {
+    // allows token to be sent via  req.query or headers
+    let token = req.query.token || req.headers.authorization;
+
+    // ["Bearer", "<tokenvalue>"]
+    if (req.headers.authorization) {
+      token = token.split(' ').pop().trim();
+    }
+
+    if (!token) {
+      return req;
+    }
+
+    // verify token and get user data out of it
+    try {
+      const { data } = jwt.verify(token, secret, { maxAge: expiration });
+      req.user = data;
+    } catch {
+      console.log('Invalid token');
+    }
+
+    // send to next endpoint
+    next();
+  },
+  signToken: function ({ userName, email, _id }) {
+    const payload = { userName, email, _id };
+
+    return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
+  },
+};
+

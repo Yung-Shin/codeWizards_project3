@@ -39,7 +39,8 @@ const typeDefs = gql`
   type Mutation {
     createUser(firstName: String!, lastName: String!, userName: String!, password: String!, email: String!): Auth
     login(userName: String!, password: String!): Auth
-    createRoulette(winningName: String!, winningChance: Float!): Roulette # New mutation to create a Roulette
+    createRoulette(winningName: String!, winningChance: Float!): Roulette 
+    spinRoulette(rouletteId: ID!): SpinResult
   }
 `;
 
