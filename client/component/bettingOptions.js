@@ -3,7 +3,7 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import NewRouletteForm from './NewRouletteForm';
 import RouletteWheel from './css/rouletteWheel';
-import UserInteractions from './userInteractions';
+import UserInteractions from './UserInteractions';
 
 const BettingOptions = () => {
   return (

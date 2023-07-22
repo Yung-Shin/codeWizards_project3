@@ -57,14 +57,14 @@ const resolvers = {
     },
 
     // Resolver to handle user login
-    login: async (parent, { userName }) => {
+    login: async (parent, { userName, password }) => {
       try {
         // Find a user in the database with the provided username using the User model
         const user = await User.findOne({ userName });
 
-        if (!user) {
+        if (!user || !(await user.isCorrectPassword(password))) {
           // If the user is not found, throw an AuthenticationError
-          throw new AuthenticationError("No user found with this username");
+          throw new AuthenticationError("Invalid Credentials");
         }
 
         // Sign a token for authentication, using the user data, and return the token and user

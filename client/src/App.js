@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import Home from './pages/Home';
-
+import Login from './pages/Login'; // Import LoginPage
 
 const client = new ApolloClient({
   uri: '/graphql',
@@ -15,15 +15,9 @@ function App() {
       <Router>
         <div>
           <Routes>
-            <Route 
-              path="/" 
-              element={<Home />}
-            />
-         
-            <Route 
-              path="*"
-              element={<div>404</div>}
-            />
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="*" element={<div>404</div>} />
           </Routes>
         </div>
       </Router>

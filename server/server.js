@@ -24,12 +24,17 @@ const server = new ApolloServer({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve up static assets
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
+
 // use routes
 app.use(routes);
 
 // Create route for the root URL.
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/public/index.html"));
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
 app.post("/api/register", async (req, res) => {
@@ -84,9 +89,5 @@ const startApolloServer = async () => {
     });
   });
 };
-
-// app.listen(3001, () => {
-//   console.log("Server listening on port 3001");
-// });
 
 startApolloServer();
