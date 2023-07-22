@@ -1,6 +1,6 @@
 const express = require('express');
 const { User } = require('../../models');
-const { signToken } = require('../utils/auth');
+const { signToken } = require('../../utils/auth');
 
 const router = express.Router();
 

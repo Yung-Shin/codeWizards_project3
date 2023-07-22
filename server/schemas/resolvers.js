@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Roulette } = require('../models');
 const { signToken } = require("../utils/auth");
 const { AuthenticationError } = require("apollo-server-express");
 
@@ -74,6 +74,24 @@ const resolvers = {
         // If there's an error during the database query or token signing, log the error and throw a custom error message
         console.error(error);
         throw new Error('Failed to perform user login');
+      }
+    },
+
+    // Resolver to spin the roulette
+    spinRoulette: async (parent, { rouletteId }) => {
+      try {
+        const roulette = await Roulette.findById(rouletteId);
+
+        if (!roulette) {
+          throw new Error('Roulette not found');
+        }
+
+        const won = Math.random() < roulette.winningChance;
+
+        return { winningName: roulette.winningName, won };
+      } catch (error) {
+        console.error(error);
+        throw new Error('Failed to spin the roulette');
       }
     },
   },

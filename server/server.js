@@ -45,7 +45,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-app.post('/api/login', async (req, req) => {
+app.post('/api/login', async (req, res) => {
   try {
     const { userName, password } = req.body;
     const user = await User.findOne({ userName });
@@ -61,6 +61,7 @@ app.post('/api/login', async (req, req) => {
 });
 
 app.delete('/api/some_data/:id', (req, res) => {
+  // !!!!!!needs code here!!!!!!
   // DELETE request logic
   // For example, delete data from the database based on the request parameter (id)
   // delete account or user etc.

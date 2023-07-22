@@ -21,14 +21,19 @@ const typeDefs = gql`
     _id: ID!
     winningName: String!
     winningChance: Float!
-    userId: ID! # NOTE: You may need to adjust the data type based on your user model setup.
+    userId: ID!
   }
 
+  type SpinResult {
+    winningName: String!
+    won: Boolean!
+
+  }
   type Query {
     users: [User]
     user(userName: String): User
-    me: User # NOTE: This resolver is not implemented yet. You may need to define it later.
-    roulettes: [Roulette] # New query to get all Roulettes
+    me: User
+    roulettes: [Roulette]
   }
 
   type Mutation {
