@@ -61,7 +61,7 @@ dist
 .vscode-test
 
 # proejct_structure
-proejct_structure
+proejct_structure.txt
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
