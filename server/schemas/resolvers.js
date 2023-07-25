@@ -1,6 +1,7 @@
 const { User, Roulette } = require('../models');
 const { signToken } = require("../utils/auth");
 const { AuthenticationError } = require("apollo-server-express");
+const mongoose = require("mongoose");
 
 const resolvers = {
   // Query resolvers to fetch data
@@ -35,7 +36,7 @@ const resolvers = {
   // Mutation resolvers to modify data
   Mutation: {
     // Resolver to create a new user
-    createUser: async (parent, { firstName, lastName, userName, password, email }) => {
+    createUser: async (root, { firstName, lastName, userName, password, email }) => {
       try {
         // Create a new user document in the database with the provided data using the User model
         const user = await User.create({
