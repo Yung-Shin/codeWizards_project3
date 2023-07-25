@@ -37,21 +37,21 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-app.post("/api/register", async (req, res) => {
-  try {
-    const { firstName, lastName, userName, password, email } = req.body;
-    const user = await User.create({
-      firstName,
-      lastName,
-      userName,
-      password,
-      email,
-    });
-    const token = signToken(user);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to register user" });
-  }
-});
+// app.post("/api/register", async (req, res) => {
+//   try {
+//     const { firstName, lastName, userName, password, email } = req.body;
+//     const user = await User.create({
+//       firstName,
+//       lastName,
+//       userName,
+//       password,
+//       email,
+//     });
+//     const token = signToken(user);
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to register user" });
+//   }
+// });
 
 app.post('/api/login', async (req, res) => { // <-- Change "req" to "res" here
   try {

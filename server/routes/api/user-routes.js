@@ -4,17 +4,17 @@ const { signToken } = require('../../utils/auth');
 
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
-    try {
-        const { firstName, lastName, userName, password, email } = req.body;
-        const user = await User.create({ firstName, lastName, userName, password, email });
-        const token = signToken(user);
-        res.json({ token, user });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to register user' });
-    }
-});
+// router.post('/register', async (req, res) => {
+//     try {
+//         const { firstName, lastName, userName, password, email } = req.body;
+//         const user = await User.create({ firstName, lastName, userName, password, email });
+//         const token = signToken(user);
+//         res.json({ token, user });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Failed to register user' });
+//     }
+// });
 
 router.post('/login', async (req, res) => {
     try {
