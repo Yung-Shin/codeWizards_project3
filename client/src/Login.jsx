@@ -11,6 +11,8 @@ export const Login = (props) => {
 
     return (
         <div className="auth-form-container">
+            <h1>CSGO Roulette</h1>
+            <br></br>
             <h2>Log In</h2>
             <form className="login-form" onSubmit={handleSubmit}>
                 <label for="email">Email</label>

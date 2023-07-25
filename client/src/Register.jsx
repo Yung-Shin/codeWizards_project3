@@ -12,6 +12,8 @@ export const Register = (props) => {
 
     return (
         <div className="auth-form-container">
+            <h1>CSGO Roulette</h1>
+            <br></br>
             <h2>Register</h2>
             <form className="register-form" onSubmit={handleSubmit}>
                 <label htmlFor="name">Full Name</label>
