@@ -8,8 +8,8 @@ This project is comprehensive MERN project, using Node Express for a server, Mon
 ## Table of Contents
 *  [Description](#description)
 *  [Challenges](#challenges)
-*  [Screenshots](#screenshots)
 *  [Technologies Used](#technologies-used)
+*  [Screenshots](#screenshots)
 *  [License](#license)
 *  [Github URL](#github-url)
 *  [Live URL](#live-url)
@@ -31,6 +31,11 @@ The second major challenge was working with different collaborators. Each collab
 - JWT Authentication    
 
 ## Screenshots
+![final 2](https://github.com/Yung-Shin/codeWizards_project3/assets/123918265/8d731278-376c-42e6-871c-4767ad08aed6)
+
+![final 3](https://github.com/Yung-Shin/codeWizards_project3/assets/123918265/1a08f1b8-e198-4537-be46-e4f803892f33)
+
+![final 1](https://github.com/Yung-Shin/codeWizards_project3/assets/123918265/fcaba6a5-19b5-485a-906b-152fb6317ef1)
 
 
 ## License
