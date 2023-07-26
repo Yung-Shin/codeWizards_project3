@@ -8,18 +8,27 @@ This project is comprehensive MERN project, using Node Express for a server, Mon
 ## Table of Contents
 *  [Description](#description)
 *  [Challenges](#challenges)
-*  [How to use](#how-to-use)
 *  [Screenshots](#screenshots)
+*  [Technologies Used](#technologies-used)
 *  [License](#license)
 *  [Github URL](#github-url)
 *  [Live URL](#live-url)
 *  [Contributors](#contributors)
   
 ## Challenges
+The first major challenge was working with new technologies, such as GraphQL and Apollo Server. For example, starting from week 11, when we first learned the back-end server materials, we were accustomed to making API requests using express API calls utilizing routes and controllers. However, making API requests in a new way was a challenging experience, and we needed some time to get used to it.   
 
+The second major challenge was working with different collaborators. Each collaborator works at a different pace, and putting the various pieces of code written by other people together was one of the most prominent challenges. 
 
-## How to use
-
+## Technologies Used
+- Node   
+- Express   
+- MongoDB    
+- Mongoose    
+- GraphQL    
+- Apollo Server    
+- React   
+- JWT Authentication    
 
 ## Screenshots
 
@@ -31,10 +40,10 @@ This project is under [MIT](https://opensource.org/licenses/MIT) license.
 https://github.com/Yung-Shin/codeWizards_project3
 
 ## Live URL   
-
+https://codewizards-project3-b0aadad34579.herokuapp.com/
 
 ## Contributors
-Abdolkarim Krimi : https://github.com/mackarimi   
+Abdolkarim Karimi : https://github.com/mackarimi   
 Benjamin Nguyen : https://github.com/algorithmnblues92    
 Harry Gilbert : https://github.com/ag-harry    
 Deepak Karjala : https://github.com/deepak441    
