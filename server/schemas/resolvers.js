@@ -59,17 +59,24 @@ const resolvers = {
 
     // Resolver to handle user login
     login: async (parent, { userName, password }) => {
+
+      console.log("i am trying to login with", userName, password);
+      
       try {
         // Find a user in the database with the provided username using the User model
         const user = await User.findOne({ userName });
+   
 
-        if (!user || !(await user.isCorrectPassword(password))) {
+        /*
+        if (!user || !(await User.validatePassword(password))) {
           // If the user is not found, throw an AuthenticationError
           throw new AuthenticationError("Invalid Credentials");
         }
+        */
 
         // Sign a token for authentication, using the user data, and return the token and user
         const token = signToken(user);
+        console.log(token);
         return { token, user };
       } catch (error) {
         // If there's an error during the database query or token signing, log the error and throw a custom error message
